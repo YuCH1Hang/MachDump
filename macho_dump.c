@@ -3,20 +3,31 @@
 //Thanks for inspiration: https://lowlevelbits.org/parsing-mach-o-files/
 //Happy dumping!
 //~GeoSn0w, June 24 2018 || Last update: February 8 2019
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <mach/machine.h>
+#include <machine.h>
 #include <string.h>
-#include <mach-o/swap.h>
-#include <mach-o/loader.h>
-#include <stdbool.h>
 
+#include <loader.h>
+#include <stdbool.h>
+#include <arpa/inet.h>
+typedef int32_t integer_t;
+
+static __inline__ unsigned int NXSwapInt( unsigned int inv)
+{
+	    return (unsigned int)ntohl((uint32_t)inv);
+}
+void swap_mach_header(struct mach_header *header,bool le){};
+void swap_mach_header_64(struct mach_header_64 *header, bool le){};
+void swap_segment_command(struct segment_command *segment,bool le){};
+void swap_segment_command_64(struct segment_command_64 *segment,bool le){};
+void swap_load_command(struct load_command *command ,bool le) {}
 struct {
   uint32_t offset;
   uint32_t size;
