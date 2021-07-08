@@ -16,18 +16,69 @@
 
 #include <loader.h>
 #include <stdbool.h>
-#include <arpa/inet.h>
+#include <byteswap.h>
 typedef int32_t integer_t;
 
 static __inline__ unsigned int NXSwapInt( unsigned int inv)
 {
-	    return (unsigned int)ntohl((uint32_t)inv);
+	    return (unsigned int)bswap_32((uint32_t)inv);
 }
-void swap_mach_header(struct mach_header *header,bool le){};
-void swap_mach_header_64(struct mach_header_64 *header, bool le){};
-void swap_segment_command(struct segment_command *segment,bool le){};
-void swap_segment_command_64(struct segment_command_64 *segment,bool le){};
-void swap_load_command(struct load_command *command ,bool le) {}
+#define SWAP(x,y) x->y=NXSwapInt(x->y);
+#define SWAP64(x,y) x->y=bswap_64(x->y);
+
+void swap_mach_header(struct mach_header *header,int le)
+{
+	SWAP(header,magic)
+	SWAP(header,cputype)
+	SWAP(header,cpusubtype)		
+	SWAP(header,filetype)	
+	SWAP(header,ncmds)
+	SWAP(header,sizeofcmds)
+	SWAP(header,flags)
+};
+void swap_mach_header_64(struct mach_header_64 *header, int le)
+{
+	SWAP(header,magic)
+	SWAP(header,cputype)
+	SWAP(header,cpusubtype)		
+	SWAP(header,filetype)	
+	SWAP(header,ncmds)
+	SWAP(header,sizeofcmds)
+	SWAP(header,flags)	
+};
+void swap_segment_command(struct segment_command *segment,int le)
+{
+SWAP(segment,cmd)		
+SWAP(segment,cmdsize)	
+SWAP(segment,vmaddr)		
+SWAP(segment,vmsize)		
+SWAP(segment,fileoff)	
+SWAP(segment,filesize)	
+SWAP(segment,maxprot)	
+SWAP(segment,initprot)	
+SWAP(segment,nsects)		
+SWAP(segment,flags)		
+}
+
+void swap_segment_command_64(struct segment_command_64 *segment,int le)
+{
+SWAP(segment,cmd)		
+SWAP(segment,cmdsize)	
+SWAP64(segment,vmaddr)		
+SWAP64(segment,vmsize)		
+SWAP64(segment,fileoff)	
+SWAP64(segment,filesize)	
+SWAP(segment,maxprot)	
+SWAP(segment,initprot)	
+SWAP(segment,nsects)		
+SWAP(segment,flags)		
+};
+void swap_load_command(struct load_command *command ,int le) 
+{
+SWAP(command,cmd)		
+SWAP(command,cmdsize)	
+}
+
 struct {
   uint32_t offset;
   uint32_t size;

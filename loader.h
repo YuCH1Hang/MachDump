@@ -39,7 +39,7 @@
  * constants that are or'ed together for the possible values of this type.
  */
 //#include <mach/vm_prot.h>
-typedef int             vm_prot_t;
+typedef int32_t             vm_prot_t;
 /*
  * <machine/thread_status.h> is expected to define the flavors of the thread
  * states and the structures of those flavors for each machine.
